@@ -1,0 +1,30 @@
+module Rottweiler
+  module Auth
+    # Implements the logic for requests authentication in Rails controllers.
+    class Settings
+      attr_writer auth_failed_cbk: Proc?
+
+      attr_writer auth_success_cbk: Proc?
+
+      def initialize: (Rottweiler::Auth::Settings superklass) -> void
+
+      def reset!: () -> void
+
+      def reset_skip!: () -> void
+
+      def skip_authentication!: (?only: Symbol | String | Array[Symbol] | Array[String], ?except: Symbol | String | Array[Symbol] | Array[String]) -> void
+
+      def skip_authentication?: (Symbol | String action_name) -> (true | false)
+
+      def auth_failed_cbk: () -> Proc?
+
+      def auth_success_cbk: () -> Proc?
+
+      def authenticate: (untyped request) -> Hash?
+
+      private
+
+      def sanitize_action_names: (Symbol action_names) -> (::Array[Symbol])
+    end
+  end
+end

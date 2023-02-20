@@ -1,4 +1,20 @@
+# Rottweiler is a Ruby gem for easy verification of JSON Web Tokens (JWTs) in Rails applications.
 module Rottweiler
-  VERSION: String
-  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+  class Error < StandardError
+  end
+
+  class InvalidParamsError < StandardError
+  end
+
+  # Allows to configure Rottweiler gem:
+  #
+  #   Rottweiler.config do |config|
+  #     config.token_header = 'Authorization'
+  #     config.token_param = [:token]
+  #
+  #     config.jwt.algorithm = 'RS256'
+  #     config.jwt.decode_key = '--- RSA PUBLIC KEY ---'
+  #   end
+  #
+  def self.config: () ?{ (Rottweiler::Configuration) -> void } -> Rottweiler::Configuration
 end

@@ -1,0 +1,24 @@
+module Rottweiler
+  module Auth
+    # Implements the logic for JWT token parsing
+    class TokenParser
+      attr_reader request: untyped
+
+      attr_reader result: Hash?
+
+      def initialize: (untyped request) -> void
+
+      def valid?: () -> bool
+
+      private
+
+      def algorithm: () -> String
+
+      def decode_key: () -> String?
+
+      def verify!: () -> void
+
+      def token: () -> String?
+    end
+  end
+end

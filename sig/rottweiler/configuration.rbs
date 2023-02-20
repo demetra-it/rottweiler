@@ -1,0 +1,16 @@
+module Rottweiler
+  # `Configuration` class allows to store and retrieve current Rottweiler configuration.
+  class Configuration
+    def self.instance: () -> Rottweiler::Configuration
+
+    attr_accessor token_header: String | Symbol
+
+    attr_accessor token_param: Array[String] | Array[Symbol]
+
+    attr_accessor unauthorized_status: Integer | Symbol | String
+
+    attr_reader jwt: Rottweiler::Configs::JWT
+
+    def initialize: () -> void
+  end
+end
