@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'openssl'
+
 class JwtHelper
   class << self
     def encode(payload, ttl = 900)
@@ -16,11 +18,11 @@ class JwtHelper
     end
 
     def private_key
-      @private_key ||= File.read(File.join(File.dirname(__dir__), 'config', 'jwt_private_key.pem'))
+      @private_key ||= OpenSSL::PKey::RSA.generate 2048
     end
 
     def public_key
-      @public_key ||= File.read(File.join(File.dirname(__dir__), 'config', 'jwt_public_key.pem'))
+      @public_key ||= private_key.public_key
     end
   end
 end
