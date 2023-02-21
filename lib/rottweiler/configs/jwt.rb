@@ -15,10 +15,11 @@ module Rottweiler
       end
 
       def algorithm=(algorithm)
-        raise ArgumentError, 'JWT Algorithm must be a string' unless algorithm.is_a?(String)
+        raise Rottweiler::InvalidJwtAlgorithmError, 'JWT Algorithm must be a string' unless algorithm.is_a?(String)
 
         unless ACCEPTED_ALGORITHMS.include?(algorithm.upcase)
-          raise ArgumentError, "Invalid JWT algorithm: #{algorithm}. Valid values are: #{ACCEPTED_ALGORITHMS}"
+          error = "Invalid JWT algorithm: #{algorithm}. Valid values are: #{ACCEPTED_ALGORITHMS}"
+          raise Rottweiler::InvalidJwtAlgorithmError, error
         end
 
         @algorithm = algorithm
