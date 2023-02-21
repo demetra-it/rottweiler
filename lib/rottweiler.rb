@@ -8,6 +8,7 @@ require_relative 'rottweiler/authentication'
 module Rottweiler
   class Error < StandardError; end
   class InvalidParamsError < StandardError; end
+  class InvalidJwtAlgorithmError < StandardError; end
 
   class << self
     # Allows to configure Rottweiler gem:
