@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'token_parser'
+require_relative 'result'
 
 module Rottweiler
   module Auth
     # Implements the logic for requests authentication in Rails controllers.
     class Settings
-      attr_writer :auth_failed_cbk, :auth_success_cbk
-
       def initialize(superklass)
         @super_params = superklass.rottweiler if superklass.respond_to?(:rottweiler)
         reset!
@@ -46,8 +44,20 @@ module Rottweiler
         false
       end
 
+      def auth_failed_cbk=(callback)
+        validate_callback!(callback)
+
+        @auth_failed_cbk = callback
+      end
+
       def auth_failed_cbk
         @auth_failed_cbk || @super_params&.auth_failed_cbk
+      end
+
+      def auth_success_cbk=(callback)
+        validate_callback!(callback)
+
+        @auth_success_cbk = callback
       end
 
       def auth_success_cbk
@@ -55,7 +65,7 @@ module Rottweiler
       end
 
       def authenticate(request)
-        TokenParser.new(request).result
+        Result.new(request)
       end
 
       private
@@ -70,6 +80,12 @@ module Rottweiler
 
           action_name.to_sym
         end
+      end
+
+      def validate_callback!(callback)
+        return if [Symbol, String, Proc].include?(callback.class)
+
+        raise Rottweiler::InvalidParamsError, 'Expected a callback block or a method name'
       end
     end
   end
