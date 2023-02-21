@@ -10,14 +10,14 @@ module Rottweiler
 
     included do
       before_action do
-        next if rottweiler.skip_authentication?
+        next if rottweiler.skip_authentication?(action_name)
 
-        @jwt_data = rottweiler.authenticate(request)
-        if @jwt_data.nil?
-          rottweiler.auth_failed_cbk && instance_exec(&rottweiler.auth_failed_cbk)
-          response.status = rottweiler.unauthorized_status
-        elsif rottweiler.auth_success_cbk
-          instance_exec(@jwt_data, &rottweiler.auth_success_cbk)
+        authentication = rottweiler.authenticate(request)
+        if authentication.valid?
+          rottweiler_on_authentication_success!(authentication.result)
+        else
+          rottweiler_on_authentication_failed!(authentication.errors)
+          force_rottweiler_auth_failure_status!
         end
       end
     end
@@ -34,12 +34,12 @@ module Rottweiler
         rottweiler.skip_authentication!(**options)
       end
 
-      def on_authentication_success(&callback)
-        rottweiler.auth_success_cbk = callback
+      def on_authentication_success(method_name = nil, &callback)
+        rottweiler.auth_success_cbk = callback || method_name
       end
 
-      def on_authentication_failed(&callback)
-        rottweiler.auth_failed_cbk = callback
+      def on_authentication_failed(method_name = nil, &callback)
+        rottweiler.auth_failed_cbk = callback || method_name
       end
     end
 
@@ -49,8 +49,28 @@ module Rottweiler
       self.class.rottweiler
     end
 
-    def jwt_data
-      @jwt_data
+    def rottweiler_on_authentication_success!(data)
+      return if rottweiler.auth_success_cbk.nil?
+
+      if rottweiler.auth_success_cbk.is_a?(Proc)
+        instance_exec(data, &rottweiler.auth_success_cbk)
+      else
+        send(rottweiler.auth_success_cbk, data)
+      end
+    end
+
+    def rottweiler_on_authentication_failed!(errors)
+      if rottweiler.auth_failed_cbk.is_a?(Proc)
+        instance_exec(errors, &rottweiler.auth_failed_cbk)
+      elsif rottweiler.auth_failed_cbk
+        send(rottweiler.auth_failed_cbk, errors)
+      else
+        render json: { errors: errors }
+      end
+    end
+
+    def force_rottweiler_auth_failure_status!
+      response.status = Rottweiler.config.unauthorized_status
     end
   end
 end
