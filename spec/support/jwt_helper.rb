@@ -4,7 +4,7 @@ require 'openssl'
 
 class JwtHelper
   class << self
-    def encode(payload, ttl = 900)
+    def encode(payload, ttl: 900)
       payload[:exp] = Time.now.to_i + ttl.to_i
       payload[:ttl] = ttl.to_i
       JWT.encode(payload, private_rsa_key, 'RS256')
@@ -17,12 +17,12 @@ class JwtHelper
       nil
     end
 
-    def private_key
-      @private_key ||= OpenSSL::PKey::RSA.generate 2048
+    def private_rsa_key
+      @private_rsa_key ||= OpenSSL::PKey::RSA.generate 2048
     end
 
-    def public_key
-      @public_key ||= private_key.public_key
+    def public_rsa_key
+      @public_rsa_key ||= private_rsa_key.public_key
     end
   end
 end

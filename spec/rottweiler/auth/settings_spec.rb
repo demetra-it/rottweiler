@@ -146,8 +146,7 @@ RSpec.describe Rottweiler::Auth::Settings do
 
     describe '#authenticate' do
       pending 'should accept a request as argument'
-      pending 'should use TokenParser to check JWT token'
-      pending 'should return JWT data if token is valid'
+      pending 'should return Rotteiler::Auth::Result'
     end
   end
 end

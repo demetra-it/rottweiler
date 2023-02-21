@@ -77,15 +77,23 @@ RSpec.describe Rottweiler::Authentication do
       end
 
       describe '#on_authentication_success' do
-        pending 'should accept a block as argument'
-        pending 'should raise an error if no block is given'
-        pending 'should be called on authentication success'
+        it 'should accept a block as argument' do
+          expect { subject.on_authentication_success { true } }.not_to raise_error
+        end
+
+        it 'should raise an error if no block is given' do
+          expect { subject.on_authentication_success }.to raise_error(Rottweiler::InvalidParamsError)
+        end
       end
 
       describe '#on_authentication_failed' do
-        pending 'should accept a block as argument'
-        pending 'should raise an error if no block is given'
-        pending 'should be called on authentication failed'
+        it 'should accept a block as argument' do
+          expect { subject.on_authentication_failed { true } }.not_to raise_error
+        end
+
+        it 'should raise an error if no block is given' do
+          expect { subject.on_authentication_failed }.to raise_error(Rottweiler::InvalidParamsError)
+        end
       end
     end
   end
