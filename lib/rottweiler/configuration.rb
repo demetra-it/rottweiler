@@ -9,6 +9,10 @@ module Rottweiler
       @instance ||= Configuration.new
     end
 
+    def self.reset!
+      @instance = Configuration.new
+    end
+
     attr_accessor :token_header, :token_param, :unauthorized_status
 
     attr_reader :jwt
