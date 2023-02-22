@@ -2,6 +2,8 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/abc07c78d5a9ece0340a/maintainability)](https://codeclimate.com/github/demetra-it/rottweiler/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/abc07c78d5a9ece0340a/test_coverage)](https://codeclimate.com/github/demetra-it/rottweiler/test_coverage)
+[![CI Test](https://github.com/demetra-it/rottweiler/actions/workflows/ci-test.yml/badge.svg)](https://github.com/demetra-it/rottweiler/actions/workflows/ci-test.yml)
+[![Gem Version](https://badge.fury.io/rb/rottweiler.svg)](https://badge.fury.io/rb/rottweiler)
 
 Rottweiler is a Ruby gem that provides functionality for verifying JSON Web Tokens (JWTs).
 It allows you to easily verify the authenticity and integrity of JWTs, making it an essential tool for applications
