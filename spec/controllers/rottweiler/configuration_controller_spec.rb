@@ -127,13 +127,13 @@ RSpec.describe Examples::ConfigurationController, type: :controller do
       context 'when decode key has invalid format' do
         before do
           Rottweiler.config.jwt.decode_key = 'invalid'
-          request.headers['Authorization'] = "Bearer #{JwtHelper.encode({ id: 1, role: 'admin' })}"
+          request.headers['Authorization'] = "Bearer #{JwtHelper.encode({ id: 1, role: "admin" })}"
         end
 
         it 'should respond with 401 code' do
           response = get(action_name)
           expect(response.status).to eq(401)
-          expect(json_body).to contain_error(:jwt_verification_error)
+          expect(json_body['errors']).to contain_error(:jwt_verification_error)
         end
       end
     end

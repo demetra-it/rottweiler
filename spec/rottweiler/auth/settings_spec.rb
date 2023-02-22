@@ -145,8 +145,100 @@ RSpec.describe Rottweiler::Auth::Settings do
     end
 
     describe '#authenticate' do
-      pending 'should accept a request as argument'
-      pending 'should return Rotteiler::Auth::Result'
+      let(:request) { double('request') }
+      let(:jwt) { JwtHelper.encode({ id: 1, role: 'admin' }) }
+      let(:headers) { { 'Authorization' => "Bearer #{jwt}" } }
+      let(:params) { {} }
+      let(:result) { subject.authenticate(request) }
+
+      before do
+        Rottweiler.config.jwt.decode_key = JwtHelper.public_rsa_key
+        allow(request).to receive(:headers).and_return(headers)
+        allow(request).to receive(:params).and_return(params)
+      end
+
+      it 'should accept a request as argument' do
+        expect { subject.authenticate(request) }.not_to raise_error
+      end
+
+      it 'should return Rotteiler::Auth::Result' do
+        expect(result).to be_a(Rottweiler::Auth::Result)
+      end
+
+      describe 'result when jwt is valid' do
+        it 'should return a success result' do
+          expect(result.valid?).to be_truthy
+        end
+
+        it 'should return the decoded jwt payload' do
+          expect(result.data).to eq(JwtHelper.decode(jwt))
+        end
+      end
+
+      describe 'result when jwt is expired' do
+        let(:jwt) { JwtHelper.encode({ id: 1, role: 'admin' }, ttl: -1) }
+
+        it 'should classify result as invalid' do
+          expect(result.valid?).to be_falsey
+        end
+
+        it 'should contain :token_expired error' do
+          expect(result.errors).to contain_error(:token_expired)
+        end
+
+        it 'should have nil data' do
+          expect(result.data).to be_nil
+        end
+      end
+
+      describe 'result when jwt is invalid' do
+        let(:jwt) { 'invalid' }
+
+        it 'should classify result as invalid' do
+          expect(result.valid?).to be_falsey
+        end
+
+        it 'should contain :invalid_token_format error' do
+          expect(result.errors).to contain_error(:invalid_token_format)
+        end
+
+        it 'should have nil data' do
+          expect(result.data).to be_nil
+        end
+      end
+
+      describe 'result when jwt has invalid algorithm' do
+        let(:jwt) { JWT.encode({ id: 1, role: 'admin' }, JwtHelper.private_rsa_key, 'RS512') }
+
+        it 'should classify result as invalid' do
+          expect(result.valid?).to be_falsey
+        end
+
+        it 'should contain :invalid_token_algorithm error' do
+          expect(result.errors).to contain_error(:invalid_token_algorithm)
+        end
+
+        it 'should have nil data' do
+          expect(result.data).to be_nil
+        end
+      end
+
+      describe 'result when jwt has invalid signature' do
+        let(:key) { OpenSSL::PKey::RSA.new(2048) }
+        let(:jwt) { JWT.encode({ id: 1, role: 'admin' }, key, 'RS256') }
+
+        it 'should classify result as invalid' do
+          expect(result.valid?).to be_falsey
+        end
+
+        it 'should contain :invalid_token_signature error' do
+          expect(result.errors).to contain_error(:invalid_token_signature)
+        end
+
+        it 'should have nil data' do
+          expect(result.data).to be_nil
+        end
+      end
     end
   end
 end
