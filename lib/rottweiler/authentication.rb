@@ -16,8 +16,8 @@ module Rottweiler
         if authentication.valid?
           rottweiler_on_authentication_success!(authentication.data)
         else
+          response.status = Rottweiler.config.unauthorized_status
           rottweiler_on_authentication_failed!(authentication.errors)
-          force_rottweiler_auth_failure_status!
         end
       end
     end
@@ -65,12 +65,8 @@ module Rottweiler
       elsif rottweiler.auth_failed_cbk
         send(rottweiler.auth_failed_cbk, errors)
       else
-        render json: { errors: errors }
+        render json: { status: response.status, path: request.path, errors: errors }
       end
-    end
-
-    def force_rottweiler_auth_failure_status!
-      response.status = Rottweiler.config.unauthorized_status
     end
   end
 end

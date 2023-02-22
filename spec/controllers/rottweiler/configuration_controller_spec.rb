@@ -18,7 +18,6 @@ RSpec.describe Examples::ConfigurationController, type: :controller do
 
   describe 'configuration' do
     describe 'token_header' do
-
       it 'should be used to identify the header containing the jwt token' do
         Rottweiler.config.token_header = 'X-Auth-Token'
         jwt = JwtHelper.encode({ id: 1, role: 'admin' })
@@ -74,6 +73,31 @@ RSpec.describe Examples::ConfigurationController, type: :controller do
         Rottweiler.config do |config|
           config.token_param = %i[custom param]
         end
+      end
+    end
+
+    describe 'unauthorized_status' do
+      it 'by default should be :unauthorized' do
+        expect(Rottweiler::Configuration.new.unauthorized_status).to eq(:unauthorized)
+      end
+
+      it 'should be configurable using a block' do
+        Rottweiler.config do |config|
+          config.unauthorized_status = :forbidden
+        end
+
+        expect(Rottweiler.config.unauthorized_status).to eq(:forbidden)
+      end
+
+      it 'should be used to set the response status when the token is invalid' do
+        jwt = JwtHelper.encode({ id: 1, role: 'admin' })
+        Rottweiler.config.token_param = %i[token]
+        response = get(action_name, params: { token: jwt })
+        expect(response.status).to eq(200)
+
+        Rottweiler.config.unauthorized_status = :forbidden
+        response = get(action_name, params: { token: 'invalid' })
+        expect(response.status).to eq(403)
       end
     end
 

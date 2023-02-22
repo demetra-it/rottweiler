@@ -2,6 +2,8 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/abc07c78d5a9ece0340a/maintainability)](https://codeclimate.com/github/demetra-it/rottweiler/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/abc07c78d5a9ece0340a/test_coverage)](https://codeclimate.com/github/demetra-it/rottweiler/test_coverage)
+[![CI Test](https://github.com/demetra-it/rottweiler/actions/workflows/ci-test.yml/badge.svg)](https://github.com/demetra-it/rottweiler/actions/workflows/ci-test.yml)
+[![Gem Version](https://badge.fury.io/rb/rottweiler.svg)](https://badge.fury.io/rb/rottweiler)
 
 Rottweiler is a Ruby gem that provides functionality for verifying JSON Web Tokens (JWTs).
 It allows you to easily verify the authenticity and integrity of JWTs, making it an essential tool for applications
@@ -150,7 +152,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/demetra-it/rottweiler. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/rottweiler/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at [https://github.com/demetra-it/rottweiler](https://github.com/demetra-it/rottweiler). This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/demetra-it/rottweiler/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -158,4 +160,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Rottweiler project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/rottweiler/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Rottweiler project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/demetra-it/rottweiler/blob/master/CODE_OF_CONDUCT.md).
