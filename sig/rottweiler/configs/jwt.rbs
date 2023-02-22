@@ -1,0 +1,16 @@
+module Rottweiler
+  module Configs
+    # Implements JWT configuration for Rottweiler
+    class JWT
+      ACCEPTED_ALGORITHMS: ::Array["RS256" | "RS384" | "RS512" | "HS256" | "HS384" | "HS512"]
+
+      attr_reader algorithm: String
+
+      attr_accessor decode_key: String?
+
+      def initialize: () -> void
+
+      def algorithm=: (String algorithm) -> void
+    end
+  end
+end

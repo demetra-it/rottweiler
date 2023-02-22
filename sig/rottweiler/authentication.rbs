@@ -1,0 +1,23 @@
+module Rottweiler
+  # Implements the logic for requests authentication in Rails controllers.
+  module Authentication
+    extend ActiveSupport::Concern
+
+    # Implement Rottweiler::Authentication class methods
+    module ClassMethods
+      attr_accessor _rottweiler: Rottweiler::Auth::Settings
+
+      def rottweiler: () -> Rottweiler::Auth::Settings
+
+      def skip_authentication!: (?only: Symbol | String | Array[Symbol] | Array[String], ?except: Symbol | String | Array[Symbol] | Array[String]) -> void
+
+      def on_authentication_success: () ?{ () -> void } -> void
+
+      def on_authentication_failed: () ?{ () -> void } -> void
+    end
+
+    def rottweiler: () -> Rottweiler::Auth::Settings
+
+    def jwt_data: () -> Hash
+  end
+end
