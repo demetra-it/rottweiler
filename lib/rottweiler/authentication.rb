@@ -14,7 +14,7 @@ module Rottweiler
 
         authentication = rottweiler.authenticate(request)
         if authentication.valid?
-          rottweiler_on_authentication_success!(authentication.result)
+          rottweiler_on_authentication_success!(authentication.data)
         else
           rottweiler_on_authentication_failed!(authentication.errors)
           force_rottweiler_auth_failure_status!

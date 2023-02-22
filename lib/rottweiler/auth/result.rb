@@ -6,11 +6,11 @@ module Rottweiler
   module Auth
     # Implements the logic for JWT token parsing
     class Result
-      attr_reader :request, :result, :errors
+      attr_reader :request, :data, :errors
 
       def initialize(request)
         @request = request
-        @result = nil
+        @data = nil
         @errors = []
 
         check_decode_key!
@@ -45,12 +45,11 @@ module Rottweiler
         end
 
         body = JWT.decode(token, decode_key, true, { algorithm: algorithm })[0]
-        @result = HashWithIndifferentAccess.new body
-      rescue JWT::ExpiredSignature, JWT::DecodeError, JWT::VerificationError => e
+        @data = HashWithIndifferentAccess.new body
+      rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::IncorrectAlgorithm, JWT::DecodeError => e
         handle_jwt_error(e)
       rescue StandardError => e
-        Rails.logger.error "#{e.message}\n#{e.backtrace.join("\n")}"
-        add_error(:jwt_verification_error, "Failed to verify JWT token: #{e.class}")
+        handle_generic_error(e)
       end
 
       def token
@@ -69,11 +68,18 @@ module Rottweiler
         case error
         when JWT::ExpiredSignature
           add_error(:token_expired, 'JWT token is expired')
-        when JWT::DecodeError
-          add_error(:invalid_token_format, 'JWT token has invalid format')
         when JWT::VerificationError
           add_error(:invalid_token_signature, 'JWT token has invalid signature')
+        when JWT::IncorrectAlgorithm
+          add_error(:invalid_token_algorithm, 'JWT token has invalid algorithm')
+        when JWT::DecodeError
+          add_error(:invalid_token_format, 'JWT token has invalid format')
         end
+      end
+
+      def handle_generic_error(error)
+        Rails.logger.error "#{error.message}\n#{error.backtrace.join("\n")}"
+        add_error(:jwt_verification_error, "Failed to verify JWT token: #{error.class}")
       end
     end
   end
