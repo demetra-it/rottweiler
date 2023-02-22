@@ -64,9 +64,9 @@ module Rottweiler
         instance_exec(errors, &rottweiler.auth_failed_cbk)
       elsif rottweiler.auth_failed_cbk
         send(rottweiler.auth_failed_cbk, errors)
-      else
-        render json: { status: response.status, path: request.path, errors: errors }
       end
+
+      render json: { status: response.status, path: request.path, errors: errors } unless performed?
     end
   end
 end
