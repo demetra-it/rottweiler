@@ -288,6 +288,43 @@ RSpec.describe Examples::RottweilerController, type: :controller do
 
       include_examples '#on_authentication_failed: should not be called', 200
     end
+
+    context 'when render is not called in the block' do
+      it 'should render a json with the list of errors' do
+        subject.on_authentication_failed do
+          # Do nothing
+        end
+
+        response = get(action_name)
+
+        expect(response.status).to eq(401)
+        expect(json_body['errors']).to contain_error(:token_missing)
+      end
+    end
+
+    context 'when render is called in the block' do
+      it 'should render the provided json, but maintain the status code' do
+        subject.on_authentication_failed do
+          render json: { custom: 'json' }
+        end
+
+        response = get(action_name)
+
+        expect(response.status).to eq(401)
+        expect(json_body['custom']).to eq('json')
+      end
+
+      it 'should allow to override the status code' do
+        subject.on_authentication_failed do
+          render json: { custom: 'json' }, status: 403
+        end
+
+        response = get(action_name)
+
+        expect(response.status).to eq(403)
+        expect(json_body['custom']).to eq('json')
+      end
+    end
   end
 
   describe 'Request verification' do
