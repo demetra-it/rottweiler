@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rottweiler (0.2.0)
+    rottweiler (0.2.1)
       jwt (>= 2.0)
       rails (>= 5.0)
 
